@@ -152,12 +152,7 @@
         if (menu.settings.position.indexOf('right') >= 0) {
             left -= menu.element.outerWidth() - menu.parent.outerWidth();
         }
-
-        // If doing overlay positioning, subtract height
-        if (menu.settings.position.indexOf('overlay') >= 0) {
-            top -= menu.parent.outerHeight();
-        }
-
+        
         // If the menu is greater than 75% of the screen size, it should scroll
         menu.element.height('auto'); // so the height calculation works correctly
         var menuHeight = menu.element.outerHeight();
@@ -173,11 +168,16 @@
             // Need to adjust the menu, to make it fit the screen bounds
             if (distanceFromBottom > -menuHeight / 2) {
                 menu.element.height(menu.element.height() + distanceFromBottom);
-            } else {
-                top -= menuHeight;
+
                 // If doing overlay positioning, subtract height
                 if (menu.settings.position.indexOf('overlay') >= 0) {
-                    top += menu.parent.outerHeight();
+                    top -= menu.parent.outerHeight();
+                }
+            } else {
+                top -= menuHeight;
+                // If NOT doing overlay positioning, subtract height
+                if (menu.settings.position.indexOf('overlay') == -1) {
+                    top -= menu.parent.outerHeight();
                 }
             }
         }
