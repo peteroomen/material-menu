@@ -1,0 +1,5 @@
+-Remove JQuery UI dependancy
+	-Remove all calls to uniqueId()
+-Remove Perfect Scrollbar dependancy
+-Add submenus
+-Prefix css with 'mj-'

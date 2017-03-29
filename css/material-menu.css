@@ -1,11 +1,28 @@
-﻿.material-menu {
+﻿.mj-rotate-90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.mj-right {
+    float: right;
+}
+
+/* Material menu */
+.material-menu {
     z-index: 1000;
     position: absolute;
-    background-color: #FFFFFF;
     overflow-y: auto;
+    max-width: 320px;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.87);
     
     padding: 16px 0;
-
+    background-color: #FFFFFF;
     border-radius: 2px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
@@ -26,7 +43,7 @@
 
 .material-menu li {
     padding: 0 24px;
-    height: 32px;
+    min-height: 32px;
     line-height: 32px;
     cursor: pointer;
 }
@@ -53,6 +70,7 @@
 
 .material-menu li.divider {
     margin: 10px 0;
+    min-height: 1px;
     height: 1px;
     background-color: #EAEAEA;
     cursor: default;
@@ -73,6 +91,15 @@
 
 .material-menu li:hover {
     background-color: #EEEEEE;
+}
+
+.material-menu .icon-wrapper {
+    height: inherit;
+    line-height: inherit;
+}
+
+.material-icons {
+    color: rgba(0, 0, 0, 0.54);
 }
 
 .material-icons.md-18 { font-size: 18px; }

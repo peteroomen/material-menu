@@ -2,13 +2,12 @@
     var i = 0;
     var menus = {};
 
-    $.fn.materialMenu = function (action, options) {
+    $.fn.materialMenu = function (action, settings) {
         var settings = $.extend({
             animationSpeed: 250,
-            id: "material-menu-" + i++,
             position: "",
             items: []
-        }, options);
+        }, settings);
 
         return this.each(function (item) {
             var parent = $(this);
@@ -16,7 +15,7 @@
                 parent.uniqueId();
                 var menu = getMenuForParent(parent);
                 menu.element = $('<div class="material-menu"><ul></ul></div>');
-                Ps.initialize(menu.element[0]);
+                menu.element.perfectScrollbar();
                 menu.parent = parent;
                 menu.settings = settings;
                 menu.items = [];
@@ -25,12 +24,13 @@
                     var item = $.extend({
                         text: "",
                         type: "normal",
+                        radioGroup: "default",
                         click: function () { }
                     }, item);
                     if (item.type === 'toggle') {
                         var elStr = "<li class='check" + (item.checked ? "" : " unchecked") + "'></li>";
                         var itemElement = $(elStr)
-                            .append("<i class='material-icons md-18'>check</i>")
+                            .append("<i class='material-icons md-24'>check</i>")
                             .append("<span>" + item.text + "</span>")
                             .click(function () {
                                 if (item.checked) {
@@ -45,11 +45,11 @@
                     } else if (item.type === 'radio') {
                         var elStr = "<li class='check" + (item.checked ? "" : " unchecked") + "'></li>";
                         var itemElement = $(elStr)
-                            .append("<i class='material-icons md-18'>check</i>")
+                            .append("<i class='material-icons md-24'>check</i>")
                             .append("<span>" + item.text + "</span>")
                             .click(function () {
                                 menu.items.forEach(function (otherItem) {
-                                    if (otherItem.radioId === item.radioId) {
+                                    if (otherItem.radioGroup === item.radioGroup) {
                                         if (otherItem == item) {
                                             item.element.removeClass('unchecked');
                                             otherItem.checked = false;
@@ -67,6 +67,14 @@
                     } else if (item.type === 'label') {
                         var itemElement = $("<li class='label'></li>")
                             .html(item.text);
+                    } else if (item.type === 'submenu') {
+                        var itemElement = $("<li></li>")
+                            .append("<span>" + item.text + "</span>")
+                            .append('<div class="icon-wrapper mj-right"><i class="material-icons md-24 mj-rotate-90">arrow_drop_up</i></div>')
+                            .click(function () {
+                                item.click(menu.parent);
+                                closeMenu(menu);
+                            });
                     } else if (item.type === 'normal') {
                         var itemElement = $("<li></li>")
                             .html(item.text)
@@ -83,14 +91,14 @@
                     menu.element.children('ul').append(itemElement);
                     menu.items.push(item);
                 });
-                menu.element.attr('id', options.id);
                 menu.element.hide();
                 $('body').append(menu.element);
 
                 return this;
             }
 
-            if (action === "open") {
+            if (action === 'open') {
+                console.log('boo!')
                 var menu = getMenuForParent(parent);
                 if (menu.open) {
                     return;
@@ -99,7 +107,7 @@
                 return this;
             }
 
-            if (action === "close") {
+            if (action === 'close') {
                 var menu = getMenuForParent(parent);
                 if (!menu.open) {
                     return;
@@ -172,9 +180,6 @@
                     top += menu.parent.outerHeight();
                 }
             }
-        } else {
-            //menu.element.height("auto");
-            menu.element.removeClass('ps-active-y');
         }
 
         menu.element.css({ top: top, left: left });
