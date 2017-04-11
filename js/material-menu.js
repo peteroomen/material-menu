@@ -1,5 +1,5 @@
 ﻿(function ($) {
-    var i = 0;
+    var id = 0;
     var menus = {};
 
     $.fn.materialMenu = function (action, settings) {
@@ -12,10 +12,9 @@
         return this.each(function (item) {
             var parent = $(this);
             if (action === "init") {
-                parent.uniqueId();
+                parent.attr('id', getNextId());
                 var menu = getMenuForParent(parent);
                 menu.element = $('<div class="material-menu"><ul></ul></div>');
-                menu.element.perfectScrollbar();
                 menu.parent = parent;
                 menu.settings = settings;
                 menu.items = [];
@@ -70,7 +69,7 @@
                     } else if (item.type === 'submenu') {
                         var itemElement = $("<li></li>")
                             .append("<span>" + item.text + "</span>")
-                            .append('<div class="icon-wrapper mj-right"><i class="material-icons md-24 mj-rotate-90">arrow_drop_up</i></div>')
+                            .append('<div class="icon-wrapper sm-right"><i class="material-icons md-24 sm-rotate-90">arrow_drop_up</i></div>')
                             .click(function () {
                                 item.click(menu.parent);
                                 closeMenu(menu);
@@ -86,7 +85,7 @@
                         console.log("Menu item with invalid type, type was: " + item.type);
                         return;
                     }
-                    itemElement.uniqueId();
+                    itemElement.attr('id', getNextId());
                     item.element = itemElement;
                     menu.element.children('ul').append(itemElement);
                     menu.items.push(item);
@@ -98,7 +97,6 @@
             }
 
             if (action === 'open') {
-                console.log('boo!')
                 var menu = getMenuForParent(parent);
                 if (menu.open) {
                     return;
@@ -194,4 +192,49 @@
         }
         return menus[id];
     }
+
+    function getNextId() {
+        return 'sm-' + id++;
+    }
+
+    // Should rethink how this works, but will do for now
+    $(document).ready(function () {
+        var items = $('sm-title');
+        for (var i=0; i<items.length; i++) {
+            var element = items.eq(i);
+            var newElement = $('<span></span>')
+                .text(element.text())
+                .addClass('sm-text sm-font-title')
+                .attr('id', getNextId());
+            element.replaceWith(newElement);
+        }
+
+        items = $('sm-toolbar');
+        for (var i=0; i<items.length; i++) {
+            var element = items.eq(i);
+            var newElement = $('<div></div>')
+                .html(element.html())
+                .addClass('sm-toolbar sm-primary-500')
+                .attr('id', getNextId());
+
+            var toolbarItems = newElement.find('sm-item');
+            console.log(toolbarItems);
+            for (var j=0; j<toolbarItems.length; j++) {
+                var item = toolbarItems.eq(j);
+                var newItem = $('<span></span>')
+                    .append($('<i></i>')
+                        .text(item.text())
+                        .addClass('sm-icon material-icons md-24'))
+                    .attr('id', getNextId());
+                if (item.attr('left') != undefined) {
+                    newItem.addClass('sm-left');
+                } else if (item.attr('right') != undefined) {
+                    newItem.addClass('sm-right');
+                }
+                item.replaceWith(newItem);
+            }
+
+            element.replaceWith(newElement);
+        }
+    });
 }(jQuery));

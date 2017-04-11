@@ -1,8 +1,6 @@
--Remove JQuery UI dependancy
-	-Remove all calls to uniqueId()
--Remove Perfect Scrollbar dependancy
-	-Should create my own 'material' scrollbar
+-Should create my own 'material' scrollbar
 -Add menu items with icons
 -Add submenus
--Prefix css with 'mj-'
+-Prefix css with 'sm-'
 -Implement the rest of material
+	-Toolbar
