@@ -145,11 +145,6 @@
         var offset = $("#" + menu.parent.attr('id')).offset();
         var left = offset.left;
         var top = offset.top + menu.parent.outerHeight();
-
-        // If doing right hand positioning, subtract width
-        if (menu.settings.position.indexOf('right') >= 0) {
-            left -= menu.element.outerWidth() - menu.parent.outerWidth();
-        }
         
         // If the menu is greater than 75% of the screen size, it should scroll
         menu.element.height('auto'); // so the height calculation works correctly
@@ -180,9 +175,15 @@
             }
         }
 
+        // Calculate width so we can ensure the menu is not displayed off of the right hand side of the screen
+        var menuWidth = menu.element.outerWidth()
+        var windowWidth = $(window).width();
+        var distanceFromRight = windowWidth - menuWidth - left - 5;
+        if (distanceFromRight < 0) {
+            left -= menu.element.outerWidth() - menu.parent.outerWidth();
+        }
+
         menu.element.css({ top: top, left: left });
-        //menu.element.css('visibility', 'hidden');
-        //menu.element.show();
     }
 
     function getMenuForParent(parent) {
